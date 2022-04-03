@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Booking</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Tomorrow&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="js/booking.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js" integrity="sha256-qXBd/EfAdjOA2FGrGAG+b3YBn2tn5A6bhz+LSgYD96k=" crossorigin="anonymous"></script>
+</head>
+<body>
+	<header id="pageheader">
+		<h1>Ciné Techno</h1>
+	</header>
+	<article id="booking-container">
+		<header>
+			<h2>Book your seats</h2>
+		</header>
+		<form id="bookingform">
+			<header>
+				<h3>Movie & Tickets.</h3>				
+			</header>
+			<div id="movie-radio-container">
+				<div>
+					<input type="radio" class="movies" name="movies" value="The Predator">
+					<label for="movie_1">The Predator</label>
+				</div>
+				<div>
+					<input type="radio" class="movies" name="movies" value="Airplane">
+					<label for="movie_2">Airplane</label>
+				</div>
+			</div>
+			<div id="groupsize-container">
+				<label for="groupsize">Group size: </label>
+				<input type="number" id="groupsize" name="groupsize" min="1" max="8">
+			</div>
+			<input id="book-btn" type="button" name="book-btn" value="Show Seats">
+		</form>
+		<section id="theaterroom-container">
+			<header>
+				<h3>Theaterroom overview</h3>
+			</header>
+			<div id="seats-container" >
+				<div id="seat-colors">
+					<div id="advised"><p>Advise</p></div>
+					<div id="open"><p>Open</p></div>
+					<div id="taken"><p>Taken</p></div>
+				</div>
+				<div id="seats-overview">
+					
+				</div>
+			</div>
+		</section>
+	</article>
+</body>
+</html>
