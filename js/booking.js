@@ -50,6 +50,28 @@ function renderRoom(room) {
     return room_div;
 }
 
+function compareArrays(array1, array2) {
+    let array1_sorted = array1.slice().sort();
+    console.log(array1_sorted);
+    let array2_sorted = array2.slice().sort();
+    console.log(array2_sorted);
+
+    if (array1_sorted.length === array2_sorted.length) {
+        console.log("Equal length");
+        array2_sorted.every((value, index) => value == array1_sorted[index])
+    } else {
+        return false;
+    }
+}
+let arraytest1 = ["20", "36", "80", "90"];
+let arraytest2 = ["36", "90", "80", "20"];
+// let result = compareArrays(arraytest1, arraytest2);
+if(compareArrays(arraytest1, arraytest2)) {
+    console.log("Test result: match");
+} else {
+    console.log("No match");
+}
+
 let remainingSeats = 0;
 
 // This funtion looks for available seats
