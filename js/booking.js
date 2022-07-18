@@ -55,11 +55,24 @@ function compareArrays(array1, array2) {
     let array1_sorted = array1.slice().sort();
     let array2_sorted = array2.slice().sort();
 
-    if (array1_sorted.length === array2_sorted.length && array2_sorted.every((value, index) => value === array1_sorted[index])) {
+    // if (array1_sorted.length === array2_sorted.length && array2_sorted.every((value, index) => value === array1_sorted[index])) {
+    //     return true;
+    // } else {
+    //     return false;
+    // }
+    if (array1_sorted.every((value, index) => value === array2_sorted[index])) {
         return true;
     } else {
         return false;
     }
+}
+let arraytest1 = ["20", "36", "80", "90"];
+let arraytest2 = ["36", "90", "80"];
+// let result = compareArrays(arraytest1, arraytest2);
+if(compareArrays(arraytest1, arraytest2)) {
+    console.log("Test result: match");
+} else {
+    console.log("No match");
 }
 
 let remainingSeats = 0;
