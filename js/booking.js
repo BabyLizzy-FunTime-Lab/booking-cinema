@@ -55,24 +55,47 @@ function compareArrays(array1, array2) {
     let array1_sorted = array1.slice().sort();
     let array2_sorted = array2.slice().sort();
 
-    // if (array1_sorted.length === array2_sorted.length && array2_sorted.every((value, index) => value === array1_sorted[index])) {
-    //     return true;
-    // } else {
-    //     return false;
-    // }
-    if (array1_sorted.every((value, index) => value === array2_sorted[index])) {
+    if (array1_sorted.length === array2_sorted.length && array2_sorted.every((value, index) => value === array1_sorted[index])) {
         return true;
     } else {
         return false;
     }
 }
+// This function checks if there are reserved seats in the searcharray
+function excludeFoundSeats(array1, array2) {
+    let check = 0;
+    array2.forEach((value) => {
+        if(array1.includes(value)) {
+            check++;
+        }
+    })
+
+    if(check > 0) {
+        return true;
+    } else {
+        return false;
+    }
+       
+}
 let arraytest1 = ["20", "36", "80", "90"];
-let arraytest2 = ["36", "90", "80"];
-// let result = compareArrays(arraytest1, arraytest2);
+let arraytest2 = ["36", "90", "80", "20"];
+let arraytest3 = ["100", "90", "110", "20"];
+let arraytest4 = ["100", "92", "110", "25"];
+
 if(compareArrays(arraytest1, arraytest2)) {
     console.log("Test result: match");
 } else {
     console.log("No match");
+}
+if (excludeFoundSeats(arraytest1, arraytest3) ) {
+    console.log("A reserved seat was found.");
+} else {
+    console.log("Array has no reserved seats.");
+}
+if (excludeFoundSeats(arraytest1, arraytest4) ) {
+    console.log("A reserved seat was found.");
+} else {
+    console.log("Array has no reserved seats.");
 }
 
 let remainingSeats = 0;
