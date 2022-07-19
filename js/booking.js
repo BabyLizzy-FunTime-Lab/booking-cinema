@@ -77,11 +77,11 @@ function excludeFoundSeats(array1, array2) {
 }
 // This function checks if there are reserved seats in the searcharray
 // The catch is that array1 is and array of objects.
-function excludeFoundSeats(array1, array2) {
+function excludeFoundSeats(objectArray, array) {
     let check = 0;
     let extractedSeatsArray = [];
-    array1.forEach((seatObject) => extractedSeatsArray.push(seatObject.number));
-    array2.forEach((value) => {
+    objectArray.forEach((seatObject) => extractedSeatsArray.push(seatObject.number));
+    array.forEach((value) => {
         if (extractedSeatsArray.includes(value)) {
             check++;
         }
@@ -92,41 +92,44 @@ function excludeFoundSeats(array1, array2) {
         return true;
     }
 }
-let arraytest1 = ["20", "36", "80", "90"];
-let arraytest2 = ["36", "90", "80", "20"];
-let arraytest3 = ["100", "90", "110", "20"];
-let arraytest4 = ["100", "92", "110", "25"];
-let arraytest5 = [
-    { number: '1', ticketnr: '' },
-    { number: '2', ticketnr: '1' },
-    { number: '3', ticketnr: '2' },
-    { number: '4', ticketnr: '' },
-    { number: '5', ticketnr: '' },
-    { number: '6', ticketnr: '3' },
-    { number: '7', ticketnr: '4' },
-    { number: '8', ticketnr: '' }
-];
+// let arraytest1 = ["20", "36", "80", "90"];
+// let arraytest2 = ["36", "90", "80", "20"];
+// let arraytest3 = ["100", "90", "110", "20"];
+// let arraytest4 = ["100", "92", "110", "25"];
+// let arraytest6 = [];
+// let arraytest5 = [
+//     { number: '20', ticketnr: '' },
+//     { number: '36', ticketnr: '1' },
+//     { number: '90', ticketnr: '2' },
+//     { number: '80', ticketnr: '' }
+// ];
 
-// if (excludeFoundSeats(arraytest1, arraytest3)) {
-//     console.log("A reserved seat was found.");
-// } else {
+// if (excludeFoundSeats(arraytest5, arraytest3)) {
 //     console.log("Array has no reserved seats.");
+// } else {
+//     console.log("A reserved seat was found.");
 // }
-// if (excludeFoundSeats(arraytest1, arraytest4)) {
-//     console.log("A reserved seat was found.");
-// } else {
+// if (excludeFoundSeats(arraytest5, arraytest6)) {
 //     console.log("Array has no reserved seats.");
+// } else {
+//     console.log("A reserved seat was found.");
 // }
 
 let remainingSeats = 0;
+let nrSeatsNeeded = 0;
+let return_array = [];
 
 // This funtion looks for available seats
 async function seatFinder(groupsize, theaterroom) {
     const total_rows = theaterroom.length;
     const center_row = Math.round(total_rows / 2);
     const best_rows = [center_row, (center_row + 1), (center_row + 2)];
-
-    let return_array = [];
+    
+    if (nrSeatsNeeded == 0) {
+        nrSeatsNeeded = groupsize;
+        return_array = [];
+        remainingSeats = 0;
+    }
 
     let posible_seating = [];
     let best_seats = [];
@@ -142,7 +145,7 @@ async function seatFinder(groupsize, theaterroom) {
             posible_seating.push(seat);
             if (posible_seating.length == groupsize) {
                 // check if all available
-                if (posible_seating.every((seat) => seat.ticketnr === '' && seat.seat_row == current_row ? true : false)) {
+                if (posible_seating.every((seat) => seat.ticketnr === '' && seat.seat_row == current_row ? true : false) && excludeFoundSeats(posible_seating, return_array)) {
                     let push_array = [];
                     posible_seating.forEach(function(bookedseat) {
                         switch (true) {
@@ -189,19 +192,37 @@ async function seatFinder(groupsize, theaterroom) {
 
     if (best_seats.length > 0) {
         return_array.push(best_seats[0]);
-        console.log(return_array);
-        return return_array;
+        if (return_array.length == nrSeatsNeeded) {
+            console.log(return_array);
+            nrSeatsNeeded = 0;
+            return return_array;
+        } else {
+            seatFinder(remainingSeats, theaterroom);
+        }
     } else if (secondbest_seats.length > 0) {
         return_array.push(secondbest_seats[0]);
-        console.log(return_array);
-        return return_array;
+        if (return_array.length == nrSeatsNeeded) {
+            console.log(return_array);
+            nrSeatsNeeded = 0;
+            return return_array;
+        } else {
+            seatFinder(remainingSeats, theaterroom);
+        }
     } else if (thirdbest_seats.length > 0) {
         return_array.push(thirdbest_seats[0]);
-        console.log(return_array);
-        return return_array;
+        if (return_array.length == nrSeatsNeeded) {
+            console.log(return_array);
+            nrSeatsNeeded = 0;
+            return return_array;
+        } else {
+            seatFinder(remainingSeats, theaterroom);
+        }
     } else {
         // alert("No match found, please reduce groupsize and try again");
         remainingSeats++;
+        if(remainingSeats == nrSeatsNeeded) {
+            return null;
+        }
         console.log("Seats left: " + remainingSeats);
         seatFinder((groupsize - 1), theaterroom);
         // return null;
