@@ -65,38 +65,58 @@ function compareArrays(array1, array2) {
 function excludeFoundSeats(array1, array2) {
     let check = 0;
     array2.forEach((value) => {
-        if(array1.includes(value)) {
+        if (array1.includes(value)) {
             check++;
         }
     })
-
-    if(check > 0) {
-        return true;
-    } else {
+    if (check > 0) {
         return false;
+    } else {
+        return true;
     }
-       
+}
+// This function checks if there are reserved seats in the searcharray
+// The catch is that array1 is and array of objects.
+function excludeFoundSeats(array1, array2) {
+    let check = 0;
+    let extractedSeatsArray = [];
+    array1.forEach((seatObject) => extractedSeatsArray.push(seatObject.number));
+    array2.forEach((value) => {
+        if (extractedSeatsArray.includes(value)) {
+            check++;
+        }
+    })
+    if (check > 0) {
+        return false;
+    } else {
+        return true;
+    }
 }
 let arraytest1 = ["20", "36", "80", "90"];
 let arraytest2 = ["36", "90", "80", "20"];
 let arraytest3 = ["100", "90", "110", "20"];
 let arraytest4 = ["100", "92", "110", "25"];
+let arraytest5 = [
+    { number: '1', ticketnr: '' },
+    { number: '2', ticketnr: '1' },
+    { number: '3', ticketnr: '2' },
+    { number: '4', ticketnr: '' },
+    { number: '5', ticketnr: '' },
+    { number: '6', ticketnr: '3' },
+    { number: '7', ticketnr: '4' },
+    { number: '8', ticketnr: '' }
+];
 
-if(compareArrays(arraytest1, arraytest2)) {
-    console.log("Test result: match");
-} else {
-    console.log("No match");
-}
-if (excludeFoundSeats(arraytest1, arraytest3) ) {
-    console.log("A reserved seat was found.");
-} else {
-    console.log("Array has no reserved seats.");
-}
-if (excludeFoundSeats(arraytest1, arraytest4) ) {
-    console.log("A reserved seat was found.");
-} else {
-    console.log("Array has no reserved seats.");
-}
+// if (excludeFoundSeats(arraytest1, arraytest3)) {
+//     console.log("A reserved seat was found.");
+// } else {
+//     console.log("Array has no reserved seats.");
+// }
+// if (excludeFoundSeats(arraytest1, arraytest4)) {
+//     console.log("A reserved seat was found.");
+// } else {
+//     console.log("Array has no reserved seats.");
+// }
 
 let remainingSeats = 0;
 
