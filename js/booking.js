@@ -191,7 +191,7 @@ async function seatFinder(groupsize, theaterroom) {
     // Should return when return_array.length maches seat found.
 
     if (best_seats.length > 0) {
-        return_array.push(best_seats[0]);
+        return_array.push(...best_seats[0]);
         if (return_array.length == nrSeatsNeeded) {
             console.log(return_array);
             nrSeatsNeeded = 0;
@@ -200,7 +200,7 @@ async function seatFinder(groupsize, theaterroom) {
             seatFinder(remainingSeats, theaterroom);
         }
     } else if (secondbest_seats.length > 0) {
-        return_array.push(secondbest_seats[0]);
+        return_array.push(...secondbest_seats[0]);
         if (return_array.length == nrSeatsNeeded) {
             console.log(return_array);
             nrSeatsNeeded = 0;
@@ -209,7 +209,7 @@ async function seatFinder(groupsize, theaterroom) {
             seatFinder(remainingSeats, theaterroom);
         }
     } else if (thirdbest_seats.length > 0) {
-        return_array.push(thirdbest_seats[0]);
+        return_array.push(...thirdbest_seats[0]);
         if (return_array.length == nrSeatsNeeded) {
             console.log(return_array);
             nrSeatsNeeded = 0;
@@ -221,6 +221,7 @@ async function seatFinder(groupsize, theaterroom) {
         // alert("No match found, please reduce groupsize and try again");
         remainingSeats++;
         if(remainingSeats == nrSeatsNeeded) {
+            console.log("Group is too big, no " + nrSeatsNeeded + " seats found");
             return null;
         }
         console.log("Seats left: " + remainingSeats);
@@ -236,20 +237,29 @@ function showSeats(selected_room, foundseats) {
         room.remove();
     }
     overview.appendChild(renderRoom(selected_room));
-    if (foundseats.length == 1) {
-        foundseats[0].forEach(function(advised_seat) {
-            elementID(advised_seat).className = "seat seatAdvised";
-        })
-    } else if (foundseats.length > 1) {
+    console.log("This is foundseats: " + foundseats);
+    if (foundseats.length > 0) {
         // This compansates if the seat search gets broken up in parts.
-        foundseats.forEach(function(seat_group) {
-            seat_group.forEach(function(advised_seat) {
-                elementID(advised_seat).className = "seat seatAdvised";
-            })
+        foundseats.forEach(function(seat) {
+                elementID(seat).className = "seat seatAdvised";
         })
     } else {
         alert("No seating posibilities found. Please reduce groupsize.");
     }
+    // if (foundseats.length == 1) {
+    //     foundseats[0].forEach(function(advised_seat) {
+    //         elementID(advised_seat).className = "seat seatAdvised";
+    //     })
+    // } else if (foundseats.length > 1) {
+    //     // This compansates if the seat search gets broken up in parts.
+    //     foundseats.forEach(function(seat_group) {
+    //         seat_group.forEach(function(advised_seat) {
+    //             elementID(advised_seat).className = "seat seatAdvised";
+    //         })
+    //     })
+    // } else {
+    //     alert("No seating posibilities found. Please reduce groupsize.");
+    // }
 }
 
 // Set group size limit
