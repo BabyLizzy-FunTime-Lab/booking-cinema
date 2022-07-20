@@ -197,7 +197,7 @@ async function seatFinder(groupsize, theaterroom) {
             nrSeatsNeeded = 0;
             return return_array;
         } else {
-            seatFinder(remainingSeats, theaterroom);
+            return seatFinder(remainingSeats, theaterroom);
         }
     } else if (secondbest_seats.length > 0) {
         return_array.push(...secondbest_seats[0]);
@@ -206,7 +206,7 @@ async function seatFinder(groupsize, theaterroom) {
             nrSeatsNeeded = 0;
             return return_array;
         } else {
-            seatFinder(remainingSeats, theaterroom);
+            return seatFinder(remainingSeats, theaterroom);
         }
     } else if (thirdbest_seats.length > 0) {
         return_array.push(...thirdbest_seats[0]);
@@ -215,7 +215,7 @@ async function seatFinder(groupsize, theaterroom) {
             nrSeatsNeeded = 0;
             return return_array;
         } else {
-            seatFinder(remainingSeats, theaterroom);
+            return seatFinder(remainingSeats, theaterroom);
         }
     } else {
         // alert("No match found, please reduce groupsize and try again");
@@ -225,7 +225,7 @@ async function seatFinder(groupsize, theaterroom) {
             return null;
         }
         console.log("Seats left: " + remainingSeats);
-        seatFinder((groupsize - 1), theaterroom);
+        return seatFinder((groupsize - 1), theaterroom);
         // return null;
     }
 }
@@ -291,7 +291,7 @@ elementID("book-btn").addEventListener("click", function(event) {
         })
         seatFinder(num_seats, selected_room_copy).then(
             function(value) {
-                console.log(value);
+                console.log("async return:" + value);
                 showSeats(selected_room, value);
             }
         );
