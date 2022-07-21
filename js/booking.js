@@ -193,6 +193,8 @@ async function seatFinder(groupsize, theaterroom) {
         // If returnarray.length == 0 run as normal.
         // Make an array with the center seat columns and give that prioraty to go into the returnarray.
         // If returnarray != 0, then we need to prioraitize the rows where the already found seats are.
+        // I need a function that gives prioraty to the sets in the middel of the teather.
+        // I need to filter them out of the best_seats, secondbest_seats or third_bestseats.
     if (best_seats.length > 0) {
         return_array.push(...best_seats[0]);
         if (return_array.length == nrSeatsNeeded) {
