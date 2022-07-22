@@ -61,18 +61,18 @@ function compareArrays(array1, array2) {
         return false;
     }
 }
-// This function checks if there are reserved seats in the searcharray
+// This function checks if values of array2 can be found in array1
 function excludeFoundSeats(array1, array2) {
-    let check = 0;
+    let found = 0;
     array2.forEach((value) => {
         if (array1.includes(value)) {
-            check++;
+            found++;
         }
     })
-    if (check > 0) {
-        return false;
+    if (found > 0) {
+        return found;
     } else {
-        return true;
+        return false;
     }
 }
 // This function checks if there are reserved seats in the searcharray
@@ -119,7 +119,6 @@ async function seatFinder(groupsize, theaterroom) {
     const best_rows = [center_row, (center_row + 1), (center_row + 2)];
     const centeredSeats = centerColumnSeats(theaterroom);
 
-
     // Set up global variabels for new search
     if (nrSeatsNeeded == 0) {
         nrSeatsNeeded = groupsize;
@@ -149,21 +148,21 @@ async function seatFinder(groupsize, theaterroom) {
                                     push_array.push(bookedseat.number);
                                     if (push_array.length === posible_seating.length) {
                                         best_seats.push(push_array);
-                                        console.log(best_seats);
+                                        // console.log(best_seats);
                                     }
                                     break;
                                 case current_row > best_rows[2]:
                                     push_array.push(bookedseat.number);
                                     if (push_array.length === posible_seating.length) {
                                         secondbest_seats.push(push_array);
-                                        console.log(secondbest_seats);
+                                        // console.log(secondbest_seats);
                                     }
                                     break;
                                 case current_row < best_rows[0]:
                                     push_array.push(bookedseat.number);
                                     if (push_array.length === posible_seating.length) {
                                         thirdbest_seats.push(push_array);
-                                        console.log(thirdbest_seats);
+                                        // console.log(thirdbest_seats);
                                     }
                                     break;
                                 default:
@@ -223,6 +222,12 @@ async function seatFinder(groupsize, theaterroom) {
         console.log("Seats left: " + remainingSeats);
         return seatFinder((groupsize - 1), theaterroom);
     }
+}
+
+function searchCenteredSeats(seatClassArray, allCenteredSeats) {
+    seatClassArray.forEach((seatCombination) => {
+
+    })
 }
 
 function showSeats(selected_room, foundseats) {
