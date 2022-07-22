@@ -224,10 +224,29 @@ async function seatFinder(groupsize, theaterroom) {
     }
 }
 
-function searchCenteredSeats(seatClassArray, allCenteredSeats) {
-    seatClassArray.forEach((seatCombination) => {
-
+function searchCenteredSeats(seatClassMultiArray, allCenteredSeatsArray) {
+    let fullCenter = [];
+    let partCenter = [];
+    seatClassMultiArray.forEach((seatCombination) => {
+        let found = 0;
+        seatCombination.forEach((seat) => {
+            if (allCenteredSeatsArray.includes(seat)) {
+                found++;
+                if (found === seatCombination.length) {
+                    fullCenter.push(seatCombination);
+                } else if (found > 0) {
+                    partCenter.push(seatCombination);
+                }
+            }
+        })
     })
+    if (fullCenter.length > 0) {
+        return fullCenter[0];
+    } else if (partCenter.length > 0) {
+        return partCenter[0];
+    } else {
+        return false;
+    }
 }
 
 function showSeats(selected_room, foundseats) {
