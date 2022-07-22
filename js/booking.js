@@ -92,28 +92,21 @@ function excludeFoundSeats(objectArray, array) {
         return true;
     }
 }
-// let arraytest1 = ["20", "36", "80", "90"];
-// let arraytest2 = ["36", "90", "80", "20"];
-// let arraytest3 = ["100", "90", "110", "20"];
-// let arraytest4 = ["100", "92", "110", "25"];
-// let arraytest6 = [];
-// let arraytest5 = [
-//     { number: '20', ticketnr: '' },
-//     { number: '36', ticketnr: '1' },
-//     { number: '90', ticketnr: '2' },
-//     { number: '80', ticketnr: '' }
-// ];
 
-// if (excludeFoundSeats(arraytest5, arraytest3)) {
-//     console.log("Array has no reserved seats.");
-// } else {
-//     console.log("A reserved seat was found.");
-// }
-// if (excludeFoundSeats(arraytest5, arraytest6)) {
-//     console.log("Array has no reserved seats.");
-// } else {
-//     console.log("A reserved seat was found.");
-// }
+function centerColumnSeats(theater) {
+    // const totalRows = theater.length;
+    const totalColumns = theater[0].length;
+    const edgeColumns = Math.round(totalColumns / 4);
+    let centeredSeats = [];
+    theater.forEach((row) => {
+        row.forEach((seat, seatcolumn) => {
+            if (((seatcolumn + 1) > edgeColumns) && (seatcolumn < (totalColumns - edgeColumns))) {
+                centeredSeats.push(seat.number);
+            }
+        })
+    })
+    return centeredSeats;
+}
 
 let remainingSeats = 0;
 let nrSeatsNeeded = 0;
@@ -124,6 +117,8 @@ async function seatFinder(groupsize, theaterroom) {
     const total_rows = theaterroom.length;
     const center_row = Math.round(total_rows / 2);
     const best_rows = [center_row, (center_row + 1), (center_row + 2)];
+    const centeredSeats = centerColumnSeats(theaterroom);
+
 
     // Set up global variabels for new search
     if (nrSeatsNeeded == 0) {
