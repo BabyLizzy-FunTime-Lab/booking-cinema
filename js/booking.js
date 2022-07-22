@@ -108,6 +108,34 @@ function centerColumnSeats(theater) {
     return centeredSeats;
 }
 
+function searchCenteredSeats(seatClassMultiArray, allCenteredSeatsArray) {
+    let fullCenter = [];
+    let partCenter = [];
+    let matchlv = [];
+    seatClassMultiArray.forEach((seatCombination) => {
+        let found = 0;
+        seatCombination.forEach((seat) => {
+            if (allCenteredSeatsArray.includes(seat)) {
+                found++;
+                if (found === seatCombination.length) {
+                    fullCenter.push(seatCombination);
+                } else if (found > 0) {
+                    matchlv.push(found);
+                    partCenter.push(seatCombination);
+                }
+            }
+        })
+    })
+    if (fullCenter.length > 0) {
+        return fullCenter[0];
+    } else if (partCenter.length > 0) {
+        let bestMatch = matchlv.indexOf(Math.max(...matchlv));
+        return partCenter[bestMatch];
+    } else {
+        return seatClassMultiArray[0];
+    }
+}
+
 let remainingSeats = 0;
 let nrSeatsNeeded = 0;
 let return_array = [];
@@ -133,64 +161,60 @@ async function seatFinder(groupsize, theaterroom) {
 
     // loop rows This can be a function to be reused.
     theaterroom.forEach(function(row_array, row_nr) {
-            let current_row = row_nr;
-            row_array.forEach(function(seat) {
-                // add row to seat object and push to posible_seating
-                seat["seat_row"] = current_row;
-                posible_seating.push(seat);
-                if (posible_seating.length == groupsize) {
-                    // check if all available
-                    if (posible_seating.every((seat) => seat.ticketnr === '' && seat.seat_row == current_row ? true : false) && excludeFoundSeats(posible_seating, return_array)) {
-                        let push_array = [];
-                        posible_seating.forEach(function(bookedseat) {
-                            switch (true) {
-                                case current_row === best_rows[0] || current_row === best_rows[1] || current_row === best_rows[2]:
-                                    push_array.push(bookedseat.number);
-                                    if (push_array.length === posible_seating.length) {
-                                        best_seats.push(push_array);
-                                        // console.log(best_seats);
-                                    }
-                                    break;
-                                case current_row > best_rows[2]:
-                                    push_array.push(bookedseat.number);
-                                    if (push_array.length === posible_seating.length) {
-                                        secondbest_seats.push(push_array);
-                                        // console.log(secondbest_seats);
-                                    }
-                                    break;
-                                case current_row < best_rows[0]:
-                                    push_array.push(bookedseat.number);
-                                    if (push_array.length === posible_seating.length) {
-                                        thirdbest_seats.push(push_array);
-                                        // console.log(thirdbest_seats);
-                                    }
-                                    break;
-                                default:
-                                    console.log("Row classification err");
-                            }
-                        })
-                        posible_seating.splice(0, 1);
-                    } else {
-                        // This leaves seats in posible_seating that could be usefull in the next loop.
-                        posible_seating.reverse().forEach(function(seat, index) {
-                            if (seat.ticketnr === '' && seat.seat_row == current_row) {
-                                return;
-                            } else {
-                                posible_seating.splice(index);
-                                posible_seating.reverse();
-                            }
-                        })
-                    }
+        let current_row = row_nr;
+        row_array.forEach(function(seat) {
+            // add row to seat object and push to posible_seating
+            seat["seat_row"] = current_row;
+            posible_seating.push(seat);
+            if (posible_seating.length == groupsize) {
+                // check if all available
+                if (posible_seating.every((seat) => seat.ticketnr === '' && seat.seat_row == current_row ? true : false) && excludeFoundSeats(posible_seating, return_array)) {
+                    let push_array = [];
+                    posible_seating.forEach(function(bookedseat) {
+                        switch (true) {
+                            case current_row === best_rows[0] || current_row === best_rows[1] || current_row === best_rows[2]:
+                                push_array.push(bookedseat.number);
+                                if (push_array.length === posible_seating.length) {
+                                    best_seats.push(push_array);
+                                    // console.log(best_seats);
+                                }
+                                break;
+                            case current_row > best_rows[2]:
+                                push_array.push(bookedseat.number);
+                                if (push_array.length === posible_seating.length) {
+                                    secondbest_seats.push(push_array);
+                                    // console.log(secondbest_seats);
+                                }
+                                break;
+                            case current_row < best_rows[0]:
+                                push_array.push(bookedseat.number);
+                                if (push_array.length === posible_seating.length) {
+                                    thirdbest_seats.push(push_array);
+                                    // console.log(thirdbest_seats);
+                                }
+                                break;
+                            default:
+                                console.log("Row classification err");
+                        }
+                    })
+                    posible_seating.splice(0, 1);
+                } else {
+                    // This leaves seats in posible_seating that could be usefull in the next loop.
+                    posible_seating.reverse().forEach(function(seat, index) {
+                        if (seat.ticketnr === '' && seat.seat_row == current_row) {
+                            return;
+                        } else {
+                            posible_seating.splice(index);
+                            posible_seating.reverse();
+                        }
+                    })
                 }
-            })
+            }
         })
-        // If returnarray.length == 0 run as normal.
-        // Make an array with the center seat columns and give that prioraty to go into the returnarray.
-        // If returnarray != 0, then we need to prioraitize the rows where the already found seats are.
-        // I need a function that gives prioraty to the sets in the middel of the teather.
-        // I need to filter them out of the best_seats, secondbest_seats or third_bestseats.
+    })
+
     if (best_seats.length > 0) {
-        return_array.push(...best_seats[0]);
+        return_array.push(...(searchCenteredSeats(best_seats, centeredSeats)));
         if (return_array.length == nrSeatsNeeded) {
             nrSeatsNeeded = 0;
             return return_array;
@@ -198,7 +222,7 @@ async function seatFinder(groupsize, theaterroom) {
             return seatFinder(remainingSeats, theaterroom);
         }
     } else if (secondbest_seats.length > 0) {
-        return_array.push(...secondbest_seats[0]);
+        return_array.push(...(searchCenteredSeats(secondbest_seats, centeredSeats)));
         if (return_array.length == nrSeatsNeeded) {
             nrSeatsNeeded = 0;
             return return_array;
@@ -206,7 +230,7 @@ async function seatFinder(groupsize, theaterroom) {
             return seatFinder(remainingSeats, theaterroom);
         }
     } else if (thirdbest_seats.length > 0) {
-        return_array.push(...thirdbest_seats[0]);
+        return_array.push(...(searchCenteredSeats(thirdbest_seats, centeredSeats)));
         if (return_array.length == nrSeatsNeeded) {
             nrSeatsNeeded = 0;
             return return_array;
@@ -224,30 +248,6 @@ async function seatFinder(groupsize, theaterroom) {
     }
 }
 
-function searchCenteredSeats(seatClassMultiArray, allCenteredSeatsArray) {
-    let fullCenter = [];
-    let partCenter = [];
-    seatClassMultiArray.forEach((seatCombination) => {
-        let found = 0;
-        seatCombination.forEach((seat) => {
-            if (allCenteredSeatsArray.includes(seat)) {
-                found++;
-                if (found === seatCombination.length) {
-                    fullCenter.push(seatCombination);
-                } else if (found > 0) {
-                    partCenter.push(seatCombination);
-                }
-            }
-        })
-    })
-    if (fullCenter.length > 0) {
-        return fullCenter[0];
-    } else if (partCenter.length > 0) {
-        return partCenter[0];
-    } else {
-        return false;
-    }
-}
 
 function showSeats(selected_room, foundseats) {
     let overview = document.getElementById('seats-overview');
@@ -281,34 +281,27 @@ let selected_room;
 let selected_room_copy;
 //Eventhandeler book-btn
 elementID("book-btn").addEventListener("click", function(event) {
-        let num_seats = elementID("groupsize").value;
+    let num_seats = elementID("groupsize").value;
 
-        // check radio input & find theatherroom
-        Array.from(elementClass('movies')).forEach(function(movie) {
-            if (movie.checked) {
-                selected_room = roomFinder(movie.value);
-                // Copy selected_room with Lodash library
-                selected_room_copy = selected_room.map(a => {
-                    let deepcopy = _.cloneDeep(a);
-                    return [...deepcopy];
-                });
-            }
-        })
-        seatFinder(num_seats, selected_room_copy).then(
-            function(value) {
-                console.log("async return:" + value);
-                showSeats(selected_room, value);
-            }
-        );
-        // showSeats(selected_room, seatFinder(num_seats, selected_room_copy));
+    // check radio input & find theatherroom
+    Array.from(elementClass('movies')).forEach(function(movie) {
+        if (movie.checked) {
+            selected_room = roomFinder(movie.value);
+            // Copy selected_room with Lodash library
+            selected_room_copy = selected_room.map(a => {
+                let deepcopy = _.cloneDeep(a);
+                return [...deepcopy];
+            });
+        }
     })
-    // I'm missing a recuring function that keeps searching and updating selected_room_copy.
-    // seatFinder(groupsize, theaterroom) needs to be a recuring function. I plan on using
-    // the groupsize argument as a countdown to stop the loop.
-    // As backup I will set a loop limiter that will return null. 
-    // After getting the proper seats, update the original selcted_room array.
-    // adding ticketnr after booking confirmation.
-    // bookedseat.ticketnr = Math.floor(Math.random() * 10000);
+    seatFinder(num_seats, selected_room_copy).then(
+        function(value) {
+            console.log("async return:" + value);
+            showSeats(selected_room, value);
+        }
+    );
+    // showSeats(selected_room, seatFinder(num_seats, selected_room_copy));
+})
 
 // These are the theaterrooms.
 let room_1 = [
