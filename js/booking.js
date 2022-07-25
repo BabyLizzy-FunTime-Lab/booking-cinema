@@ -16,6 +16,9 @@ function roomFinder(movie) {
         case "Airplane":
             return room_2;
             break;
+        case "The Room":
+            return room_one.room;
+            break;
         default:
             console.log("Movie/Room not found");
     }
@@ -303,7 +306,40 @@ elementID("book-btn").addEventListener("click", function(event) {
     // showSeats(selected_room, seatFinder(num_seats, selected_room_copy));
 })
 
-// These are the theaterrooms.
+
+// These are the theaterrooms. Rooms 1 and 2 are hardcoded
+// Room 3 is auto genereated with randomized inputs
+
+// This is the theaterroom class
+class theaterroom {
+    constructor(name, rows, rowLength, seatsTaken) {
+        this.room = name;
+        this.rows = rows;
+        this.rowLength = rowLength;
+        this.seatsTaken = seatsTaken;
+    }
+    makeRoom() {
+        let seatnumber = 0;
+        this.room = [];
+        for (let rowcount = 0; rowcount < this.rows; rowcount++) {
+            let seatRow = [];
+            for (let seatcount = 0; seatcount < this.rowLength; seatcount++) {
+                seatnumber++;
+                seatRow.push({
+                    number: seatnumber.toString(),
+                    ticketnr: ''
+                })
+            }
+            this.room.push(seatRow);
+        }
+        return this.room;
+    }
+}
+
+const room_three = new theaterroom("one", 8, 8, 0);
+room_three.makeRoom();
+console.log(room_three.room);
+
 let room_1 = [
     // row 1
     [
