@@ -17,7 +17,7 @@ function roomFinder(movie) {
             return room_2;
             break;
         case "The Room":
-            return room_one.room;
+            return room_three.room;
             break;
         default:
             console.log("Movie/Room not found");
@@ -317,17 +317,25 @@ class theaterroom {
         this.rows = rows;
         this.rowLength = rowLength;
         this.seatsTaken = seatsTaken;
+        this.totalSeats = rows * rowLength;
     }
     makeRoom() {
         let seatnumber = 0;
+        let seatsTakenCounter = 0;
         this.room = [];
         for (let rowcount = 0; rowcount < this.rows; rowcount++) {
             let seatRow = [];
+            // Make aan array of randomly selected seats
+            // Generate seatstaken amount of random numbers between 1 and totalseats
             for (let seatcount = 0; seatcount < this.rowLength; seatcount++) {
                 seatnumber++;
+                let ticketnumber = '';
+                if (seatsTakenCounter != this.seatstaken) {
+                    // Give tickernumber a random number toString()
+                }
                 seatRow.push({
                     number: seatnumber.toString(),
-                    ticketnr: ''
+                    ticketnr: ticketnumber
                 })
             }
             this.room.push(seatRow);
@@ -336,7 +344,7 @@ class theaterroom {
     }
 }
 
-const room_three = new theaterroom("one", 8, 8, 0);
+const room_three = new theaterroom("three", 8, 8, 0);
 room_three.makeRoom();
 console.log(room_three.room);
 
