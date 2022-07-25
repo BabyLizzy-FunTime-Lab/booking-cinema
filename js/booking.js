@@ -321,21 +321,26 @@ class theaterroom {
     }
     makeRoom() {
         let seatnumber = 0;
-        let seatsTakenCounter = 0;
+        let seatsTakenArray = [];
+        // Make aan array of randomly selected seats
+        // Generate seatstaken amount of random numbers between 1 and totalseats
+        while (seatsTakenArray.length < this.seatsTaken) {
+            let randomNumber = Math.floor(Math.random() * this.totalSeats + 1);
+            if(seatsTakenArray.indexOf(randomNumber) === -1) seatsTakenArray.push(randomNumber);
+        }
+        console.log(seatsTakenArray);
         this.room = [];
         for (let rowcount = 0; rowcount < this.rows; rowcount++) {
             let seatRow = [];
-            // Make aan array of randomly selected seats
-            // Generate seatstaken amount of random numbers between 1 and totalseats
             for (let seatcount = 0; seatcount < this.rowLength; seatcount++) {
                 seatnumber++;
                 let ticketnumber = '';
-                if (seatsTakenCounter != this.seatstaken) {
-                    // Give tickernumber a random number toString()
+                if (seatsTakenArray.includes(seatnumber)) {
+                    ticketnumber = Math.floor(Math.random() * 1000 + 10);
                 }
                 seatRow.push({
                     number: seatnumber.toString(),
-                    ticketnr: ticketnumber
+                    ticketnr: ticketnumber.toString()
                 })
             }
             this.room.push(seatRow);
@@ -344,7 +349,7 @@ class theaterroom {
     }
 }
 
-const room_three = new theaterroom("three", 8, 8, 0);
+const room_three = new theaterroom("three", 8, 8, 30);
 room_three.makeRoom();
 console.log(room_three.room);
 
